@@ -1,0 +1,12 @@
+main: com.gmail.pon52_lemon.App
+name: mob_explosion_plugin
+version: "0.1"
+api: 1.16.5
+api-version: 1.16
+
+commands:
+   getWAPInfo:
+      description: This get Amway Member Information command.
+      usage: /<command>
+      permission: 
+      permission-message:
