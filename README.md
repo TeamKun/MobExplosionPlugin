@@ -1,0 +1,2 @@
+# MobExplosionPlugin
+MOB爆クラフト
