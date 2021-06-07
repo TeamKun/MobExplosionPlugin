@@ -1,12 +1,20 @@
-main: com.gmail.pon52_lemon.App
+main: com.gmail.pon52_lemon.MobExplosion
 name: mob_explosion_plugin
 version: "0.1"
 api: 1.16.5
 api-version: 1.16
+authors: [pon52]
+description: Mob爆プラグイン
 
 commands:
-   getWAPInfo:
-      description: This get Amway Member Information command.
-      usage: /<command>
-      permission: 
-      permission-message:
+   MobBaku:
+      description: Enable MOB explosion Plugin
+      usage: /<command> on <player>
+      description: Added a player to explode
+      usage: /<command> add <player>
+      description: Disable MOB explosion Plugin
+      usage: /<command> off
+      description: Check help
+      usage: /<command> help
+      permission: op
+      permission-message: 権限がありません
