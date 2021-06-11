@@ -1,2 +1,6 @@
 # build生成物を対象外に
 .target/
+.server/
+.settings/
+.classpath
+.project

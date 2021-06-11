@@ -1,0 +1,14 @@
+main: com.gmail.pon52_lemon.MobExplosion
+name: mob_explosion_plugin
+version: "0.1"
+api: 1.16.5
+api-version: 1.16
+authors: [pon52]
+description: Mob爆プラグイン
+
+commands:
+   mobbaku:
+      description: Get command help
+      usage: /<command> help
+      permission: op
+      permission-message: 権限がありません
