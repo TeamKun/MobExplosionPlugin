@@ -1,6 +1,7 @@
 package com.gmail.pon52_lemon;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.Command;
@@ -8,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MobExplosion extends JavaPlugin
 {
@@ -29,11 +31,17 @@ public class MobExplosion extends JavaPlugin
         // Plugin shutdown logic
     }
 
+    // コマンド処理
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
     {   
         Boolean result = false;
 
-        if (cmd.getName().equals("MobBaku")) 
+        if(args.length == 0)
+        {
+            sender.sendMessage("不正なコマンドです");
+            sender.sendMessage("[MobBaku help] でコマンドを確認してください");
+        }
+        else if (cmd.getName().equals("MobBaku")) 
         {
             if(args[0].equals("on"))
             {
@@ -44,7 +52,7 @@ public class MobExplosion extends JavaPlugin
                 {
                     // 爆発するプレイヤー追加
                     String[] list = getPlayerList(args);
-                    addPlayer(list);
+                    addPlayer(sender, list);
                 }
 
                 result = true;
@@ -61,7 +69,7 @@ public class MobExplosion extends JavaPlugin
                 {
                 // 爆発するプレイヤー追加
                     String[] list = getPlayerList(args);
-                    addPlayer(list);
+                    addPlayer(sender, list);
                     result = true;
                 }
                 else
@@ -76,6 +84,11 @@ public class MobExplosion extends JavaPlugin
                 getHelp(sender);
                 result = true;
             }
+            else if(args[0].equals("info"))
+            {
+                getInfo();
+                result = true;
+            }
             else
             {
                 sender.sendMessage("不正なコマンドです");
@@ -86,18 +99,21 @@ public class MobExplosion extends JavaPlugin
         return result;
     }
 
+    // 起動コマンド処理
     private void onMobBaku()
     {
         this.explosion_player.clear();
         this.enable_plugin = true;        
     }
 
+    // 終了コマンド処理
     private void offMobBaku()
     {
         this.enable_plugin = false;        
     }
 
-    private void addPlayer(String[] args)
+    // プレイヤー追加コマンド処理
+    private void addPlayer(CommandSender sender, String[] args)
     {
         if(this.enable_plugin == false)
         {
@@ -105,18 +121,37 @@ public class MobExplosion extends JavaPlugin
             return;
         }
 
-        if(args[0].contains("@"))
+        if(args[0].equals("@a") || args[0].equals("@r"))
         {
             // セレクター指定時の処理
-
+            // List<Player> entityList = Bukkit.selectEntities(sender, args[0]);
+            
+            // if(!entityList.isEmpty())
+            // {
+            //     for(Player pl : entityList)
+            //     {
+            //         String pl_name = pl.getPlayerListName();
+            //         if(!this.explosion_player.contains(pl_name))
+            //         {
+            //             this.explosion_player.add(pl_name);
+            //         }
+            //     }
+            // }
         }
         else
         {
             // プレイヤーID指定時の処理
-
+            for(String pl : args)
+            {
+                if(!this.explosion_player.contains(pl))
+                {
+                    this.explosion_player.add(pl);
+                }
+            }
         }
     }
     
+    // コマンドヘルプ取得処理
     private void getHelp(CommandSender sender)
     {
         // コマンドのへプルを表示
@@ -125,6 +160,7 @@ public class MobExplosion extends JavaPlugin
         sender.sendMessage("MobBaku off [プラグインを無効化]");
     }
 
+    // コマンド引数からプレイヤー名のみ抽出
     private String[] getPlayerList(String[] args)
     {
         // コマンドの引数からプレイヤーIDのみを取り出す
@@ -135,5 +171,12 @@ public class MobExplosion extends JavaPlugin
         String[] result = (String[])list.toArray(new String[list.size()]);
 
         return result;
+    }
+
+    // 試験用
+    private void getInfo()
+    {
+        getLogger().info("Enable Plugin : " + this.enable_plugin);
+        getLogger().info("Explosion Player : " + this.explosion_player.toString());
     }
 }
