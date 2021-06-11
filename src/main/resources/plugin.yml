@@ -7,16 +7,8 @@ authors: [pon52]
 description: Mob爆プラグイン
 
 commands:
-   MobBaku:
+   mobbaku:
       description: Enable MOB explosion Plugin
-      usage: /<command> on <player>
-      description: Added a player to explode
-      usage: /<command> add <player>
-      description: Disable MOB explosion Plugin
-      usage: /<command> off
-      description: Get Plugin Info
-      usage: /<command> info
-      description: Check help
       usage: /<command> help
       permission: op
       permission-message: 権限がありません

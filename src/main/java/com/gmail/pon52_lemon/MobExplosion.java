@@ -41,7 +41,7 @@ public class MobExplosion extends JavaPlugin
             sender.sendMessage("不正なコマンドです");
             sender.sendMessage("[MobBaku help] でコマンドを確認してください");
         }
-        else if (cmd.getName().equals("MobBaku")) 
+        else if (cmd.getName().equalsIgnoreCase("mobbaku")) 
         {
             if(args[0].equals("on"))
             {
@@ -124,7 +124,7 @@ public class MobExplosion extends JavaPlugin
         if(args[0].equals("@a") || args[0].equals("@r"))
         {
             // セレクター指定時の処理
-            // List<Player> entityList = Bukkit.selectEntities(sender, args[0]);
+            List<Entity> entityList = Bukkit.selectEntities(sender, args[0]);
             
             // if(!entityList.isEmpty())
             // {
@@ -155,8 +155,8 @@ public class MobExplosion extends JavaPlugin
     private void getHelp(CommandSender sender)
     {
         // コマンドのへプルを表示
-        sender.sendMessage("MobBaku on <playerId>  [プラグインを有効化 (プレイヤーの指定は任意です)]");
-        sender.sendMessage("MobBaku add <playerId>  [ダメージを受けると爆発するプレイヤーを追加]");
+        sender.sendMessage("MobBaku on <player>  [プラグインを有効化 (プレイヤーの指定は任意です)]");
+        sender.sendMessage("MobBaku add <player>  [ダメージを受けると爆発するプレイヤーを追加]");
         sender.sendMessage("MobBaku off [プラグインを無効化]");
     }
 
