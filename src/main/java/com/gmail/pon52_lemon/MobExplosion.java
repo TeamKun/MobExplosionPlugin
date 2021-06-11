@@ -39,7 +39,7 @@ public class MobExplosion extends JavaPlugin
         if(args.length == 0)
         {
             sender.sendMessage("不正なコマンドです");
-            sender.sendMessage("[MobBaku help] でコマンドを確認してください");
+            sender.sendMessage("[mobbaku help] でコマンドを確認してください");
         }
         else if (cmd.getName().equalsIgnoreCase("mobbaku")) 
         {
@@ -75,7 +75,7 @@ public class MobExplosion extends JavaPlugin
                 else
                 {
                     sender.sendMessage("プレイヤー名が指定されていません");
-                    sender.sendMessage("[MobBaku help] でコマンドを確認してください");
+                    sender.sendMessage("[mobbaku help] でコマンドを確認してください");
                 }
             }
             else if(args[0].equals("help"))
@@ -92,7 +92,7 @@ public class MobExplosion extends JavaPlugin
             else
             {
                 sender.sendMessage("不正なコマンドです");
-                sender.sendMessage("[MobBaku help] でコマンドを確認してください");
+                sender.sendMessage("[mobbaku help] でコマンドを確認してください");
             }
         }
 
@@ -155,9 +155,9 @@ public class MobExplosion extends JavaPlugin
     private void getHelp(CommandSender sender)
     {
         // コマンドのへプルを表示
-        sender.sendMessage("MobBaku on <player>  [プラグインを有効化 (プレイヤーの指定は任意です)]");
-        sender.sendMessage("MobBaku add <player>  [ダメージを受けると爆発するプレイヤーを追加]");
-        sender.sendMessage("MobBaku off [プラグインを無効化]");
+        sender.sendMessage("mobbaku on <player>  [プラグインを有効化 (プレイヤーの指定は任意です)]");
+        sender.sendMessage("mobbaku add <player>  [ダメージを受けると爆発するプレイヤーを追加]");
+        sender.sendMessage("mobbaku off [プラグインを無効化]");
     }
 
     // コマンド引数からプレイヤー名のみ抽出

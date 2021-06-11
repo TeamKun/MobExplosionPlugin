@@ -8,7 +8,7 @@ description: Mob爆プラグイン
 
 commands:
    mobbaku:
-      description: Enable MOB explosion Plugin
+      description: Get command help
       usage: /<command> help
       permission: op
       permission-message: 権限がありません
