@@ -7,15 +7,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class MobExplosion extends JavaPlugin
 {
 
-    public boolean enable_plugin = false;       // プラグインの有効無効
-    public ArrayList<String> explosion_player;  // ダメージを受けると爆発するプレイヤーのリスト
+    private boolean enable_plugin = false;       // プラグインの有効無効
+    private ArrayList<String> explosion_player;  // ダメージを受けると爆発するプレイヤーのリスト
 
     @Override
     public void onEnable() 
@@ -31,7 +31,23 @@ public class MobExplosion extends JavaPlugin
         // Plugin shutdown logic
     }
 
+    // タブ補完
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) 
+    {
+        switch(args.length)
+        {
+            case 1:
+                return Stream.of("on", "off", "add", "help", "info")
+                        .filter(e -> e.startsWith(args[0]))
+                        .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
+    }
+
     // コマンド処理
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
     {   
         Boolean result = false;
@@ -126,17 +142,18 @@ public class MobExplosion extends JavaPlugin
             // セレクター指定時の処理
             List<Entity> entityList = Bukkit.selectEntities(sender, args[0]);
             
-            // if(!entityList.isEmpty())
-            // {
-            //     for(Player pl : entityList)
-            //     {
-            //         String pl_name = pl.getPlayerListName();
-            //         if(!this.explosion_player.contains(pl_name))
-            //         {
-            //             this.explosion_player.add(pl_name);
-            //         }
-            //     }
-            // }
+            if(!entityList.isEmpty())
+            {
+                for(Entity entity : entityList)
+                {
+                    Player pl = (Player)entity;
+                    String pl_name = pl.getName();
+                    if(!this.explosion_player.contains(pl_name))
+                    {
+                        this.explosion_player.add(pl_name);
+                    }
+                }
+            }
         }
         else
         {
