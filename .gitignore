@@ -1,5 +1,6 @@
 # build生成物を対象外に
 target/
 server/
+src/test/
 .settings/
 .classpath

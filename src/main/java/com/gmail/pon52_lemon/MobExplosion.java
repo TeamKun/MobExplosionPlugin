@@ -13,15 +13,14 @@ import java.util.stream.Collectors;
 
 public class MobExplosion extends JavaPlugin
 {
-
-    private boolean enable_plugin = false;       // プラグインの有効無効
-    private ArrayList<String> explosion_player;  // ダメージを受けると爆発するプレイヤーのリスト
+    private ExplosionListener obj_explosion;
 
     @Override
     public void onEnable() 
     {
-        // Plugin startup logic
-        this.explosion_player = new ArrayList<>();
+        this.obj_explosion = new ExplosionListener();
+        getServer().getPluginManager().registerEvents(this.obj_explosion, this);
+
         getLogger().info("MobExplosionPlugin が導入されました。");
     }
 
@@ -118,25 +117,19 @@ public class MobExplosion extends JavaPlugin
     // 起動コマンド処理
     private void onMobBaku()
     {
-        this.explosion_player.clear();
-        this.enable_plugin = true;        
+        this.obj_explosion.clearExplosionPlayer();
+        this.obj_explosion.setEnableFlg(true);
     }
 
     // 終了コマンド処理
     private void offMobBaku()
     {
-        this.enable_plugin = false;        
+        this.obj_explosion.setEnableFlg(false);
     }
 
     // プレイヤー追加コマンド処理
     private void addPlayer(CommandSender sender, String[] args)
     {
-        if(this.enable_plugin == false)
-        {
-            // プラグイン無効時は何もせずリターン
-            return;
-        }
-
         if(args[0].equals("@a") || args[0].equals("@r"))
         {
             // セレクター指定時の処理
@@ -144,27 +137,20 @@ public class MobExplosion extends JavaPlugin
             
             if(!entityList.isEmpty())
             {
+                List<String> pl_list = new ArrayList<>();
                 for(Entity entity : entityList)
                 {
                     Player pl = (Player)entity;
-                    String pl_name = pl.getName();
-                    if(!this.explosion_player.contains(pl_name))
-                    {
-                        this.explosion_player.add(pl_name);
-                    }
+                    pl_list.add(pl.getName());
                 }
+
+                this.obj_explosion.setExplosionPlayer(pl_list.toArray(new String[pl_list.size()]));
             }
         }
         else
         {
             // プレイヤーID指定時の処理
-            for(String pl : args)
-            {
-                if(!this.explosion_player.contains(pl))
-                {
-                    this.explosion_player.add(pl);
-                }
-            }
+            this.obj_explosion.setExplosionPlayer(args);
         }
     }
     
@@ -193,7 +179,7 @@ public class MobExplosion extends JavaPlugin
     // 試験用
     private void getInfo()
     {
-        getLogger().info("Enable Plugin : " + this.enable_plugin);
-        getLogger().info("Explosion Player : " + this.explosion_player.toString());
+        getLogger().info("Enable Plugin : " + this.obj_explosion.getEnableFlg());
+        getLogger().info("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
     }
 }
