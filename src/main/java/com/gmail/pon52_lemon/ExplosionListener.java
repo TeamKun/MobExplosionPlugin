@@ -49,7 +49,7 @@ public class ExplosionListener implements Listener
         }
 
         // 爆発処理
-        // loc.getWorld().createExplosion(loc, 1);
+        loc.getWorld().createExplosion(entity, 3);
     }
 
     public void setEnableFlg(Boolean flg)
