@@ -181,5 +181,6 @@ public class MobExplosion extends JavaPlugin
     {
         getLogger().info("Enable Plugin : " + this.obj_explosion.getEnableFlg());
         getLogger().info("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
+        getLogger().info("Explosion Range : " + this.obj_explosion.getExplosionRange());
     }
 }

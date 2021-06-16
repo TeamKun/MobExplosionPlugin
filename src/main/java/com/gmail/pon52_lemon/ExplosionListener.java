@@ -11,14 +11,14 @@ import java.util.*;
 
 public class ExplosionListener implements Listener 
 {
-    private boolean enable_plugin = false;       // プラグインの有効無効
-    private ArrayList<String> explosion_player;  // ダメージを受けると爆発するプレイヤーのリスト
+    private boolean enable_plugin = false;          // プラグインの有効無効
+    private ArrayList<String> explosion_player;     // ダメージを受けると爆発するプレイヤーのリスト
+    private int explosion_range = 3;                //爆発範囲
 
     public ExplosionListener()
     {
         this.explosion_player = new ArrayList<>();
     }
-
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event)
@@ -49,7 +49,7 @@ public class ExplosionListener implements Listener
         }
 
         // 爆発処理
-        loc.getWorld().createExplosion(entity, 3);
+        loc.getWorld().createExplosion(entity, this.explosion_range, false);
     }
 
     public void setEnableFlg(Boolean flg)
@@ -88,5 +88,15 @@ public class ExplosionListener implements Listener
     public String[] getExplosionPlayer()
     {
         return this.explosion_player.toArray(new String[this.explosion_player.size()]);
+    }
+
+    public void setExplosionRange(int range)
+    {
+        this.explosion_range = range;
+    }
+
+    public int getExplosionRange()
+    {
+        return this.explosion_range;
     }
 }
