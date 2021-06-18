@@ -29,16 +29,9 @@ public class ExplosionListener implements Listener
         }
 
         Entity entity = event.getEntity();
-        EntityType type = entity.getType();
-        Location loc = entity.getLocation();
+        EntityType type = entity.getType();   
 
-        // LivingEntity 以外は爆発しない
-        if(!(entity instanceof LivingEntity))
-        {
-            return;
-        }
-
-        // Entityのタイプがプレイヤーの場合、指定プレイヤー以外は爆発しない
+        // Entityのタイプがプレイヤーの場合、指定プレイヤー以外は爆発しない 
         if(type == EntityType.PLAYER)
         {
             Player player = (Player)entity;
@@ -48,14 +41,16 @@ public class ExplosionListener implements Listener
             }
         }
 
-        // 爆発処理
-        loc.getWorld().createExplosion(entity, this.explosion_range, false);
-
-        // 誘爆を防ぐためにエンティティは死亡
-        event.setDamage(event.getDamage() * 1000);        
-        // Damageable da = (Damageable)entity;
-        // da.setHealth(0.0);
-
+        // LivingEntity のみ爆発
+        if(entity instanceof LivingEntity)
+        {
+            // 爆発処理
+            Location loc = entity.getLocation();
+            loc.getWorld().createExplosion(entity, this.explosion_range, false);
+    
+            // // 誘爆を防ぐためにエンティティをKILL
+            event.setDamage(event.getDamage() * 1000);
+        }
     }
 
     public void setEnableFlg(Boolean flg)
