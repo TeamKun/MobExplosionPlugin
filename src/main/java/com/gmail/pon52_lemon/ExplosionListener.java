@@ -14,6 +14,7 @@ public class ExplosionListener implements Listener
     private boolean enable_plugin = false;          // プラグインの有効無効
     private ArrayList<String> explosion_player;     // ダメージを受けると爆発するプレイヤーのリスト
     private int explosion_range = 3;                //爆発範囲
+    private boolean excl_flg = false;               // 排他制御用フラグ
 
     public ExplosionListener()
     {
@@ -23,10 +24,12 @@ public class ExplosionListener implements Listener
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event)
     {
-        if(this.enable_plugin == false)
+        if(this.enable_plugin == false || excl_flg == true)
         {
             return;
         }
+
+        excl_flg = true;
 
         Entity entity = event.getEntity();
         EntityType type = entity.getType();   
@@ -37,6 +40,7 @@ public class ExplosionListener implements Listener
             Player player = (Player)entity;
             if(!this.explosion_player.contains(player.getName()))
             {
+                excl_flg = false;
                 return;
             }
         }
@@ -48,9 +52,11 @@ public class ExplosionListener implements Listener
             Location loc = entity.getLocation();
             loc.getWorld().createExplosion(entity, this.explosion_range, false);
     
-            // // 誘爆を防ぐためにエンティティをKILL
+            // 誘爆を防ぐためにエンティティをKILL
             event.setDamage(event.getDamage() * 1000);
         }
+        
+        excl_flg = false;
     }
 
     public void setEnableFlg(Boolean flg)

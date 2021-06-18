@@ -40,6 +40,13 @@ public class MobExplosion extends JavaPlugin
                 return Stream.of("on", "off", "add", "remove", "help", "info", "range")
                         .filter(e -> e.startsWith(args[0]))
                         .collect(Collectors.toList());
+            case 2:
+                if(args[0].equals("on") || args[0].equals("add") || args[0].equals("remove"))
+                {
+                    return Stream.concat(Bukkit.getOnlinePlayers().stream().map(Player::getName), Stream.of("@a", "@r"))
+                                .filter(x -> x.startsWith(args[1]))
+                                .collect(Collectors.toList());
+                }
         }
 
         return Collections.emptyList();
@@ -116,7 +123,7 @@ public class MobExplosion extends JavaPlugin
             }
             else if(args[0].equals("info"))
             {
-                getInfo();
+                getInfo(sender);
                 result = true;
             }
             else if(args[0].equals("range"))
@@ -239,11 +246,11 @@ public class MobExplosion extends JavaPlugin
     }
 
     // プラグインの設定情報取得
-    private void getInfo()
+    private void getInfo(CommandSender sender)
     {
-        getLogger().info("Enable Plugin : " + this.obj_explosion.getEnableFlg());
-        getLogger().info("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
-        getLogger().info("Explosion Range : " + this.obj_explosion.getExplosionRange());
+        sender.sendMessage("Enable Plugin : " + this.obj_explosion.getEnableFlg());
+        sender.sendMessage("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
+        sender.sendMessage("Explosion Range : " + this.obj_explosion.getExplosionRange());
     }
 
     // コマンド引数からプレイヤー名のみ抽出
