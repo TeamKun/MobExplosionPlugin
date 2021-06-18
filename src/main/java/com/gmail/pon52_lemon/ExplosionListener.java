@@ -50,6 +50,12 @@ public class ExplosionListener implements Listener
 
         // 爆発処理
         loc.getWorld().createExplosion(entity, this.explosion_range, false);
+
+        // 誘爆を防ぐためにエンティティは死亡
+        event.setDamage(event.getDamage() * 1000);        
+        // Damageable da = (Damageable)entity;
+        // da.setHealth(0.0);
+
     }
 
     public void setEnableFlg(Boolean flg)
@@ -83,6 +89,18 @@ public class ExplosionListener implements Listener
                 this.explosion_player.add(player);
             }
         }
+    }
+
+    public void removeExplosionPlayer(String[] players)
+    {
+        if(this.enable_plugin == false)
+        {
+            // プラグイン無効時は何もせずリターン
+            return;
+        }
+
+        ArrayList<String> list = new ArrayList<String>(Arrays.asList(players));
+        this.explosion_player.removeAll(list);
     }
 
     public String[] getExplosionPlayer()

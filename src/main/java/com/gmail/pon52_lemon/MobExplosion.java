@@ -37,7 +37,7 @@ public class MobExplosion extends JavaPlugin
         switch(args.length)
         {
             case 1:
-                return Stream.of("on", "off", "add", "help", "info")
+                return Stream.of("on", "off", "add", "remove", "help", "info", "range")
                         .filter(e -> e.startsWith(args[0]))
                         .collect(Collectors.toList());
         }
@@ -93,6 +93,21 @@ public class MobExplosion extends JavaPlugin
                     sender.sendMessage("[mobbaku help] でコマンドを確認してください");
                 }
             }
+            else if(args[0].equals("remove"))
+            {
+                if(args.length > 1)
+                {
+                // 爆発するプレイヤー追加
+                    String[] list = getPlayerList(args);
+                    removePlayer(sender, list);
+                    result = true;
+                }
+                else
+                {
+                    sender.sendMessage("プレイヤー名が指定されていません");
+                    sender.sendMessage("[mobbaku help] でコマンドを確認してください");
+                }
+            }
             else if(args[0].equals("help"))
             {
                 // ヘルプ取得
@@ -103,6 +118,19 @@ public class MobExplosion extends JavaPlugin
             {
                 getInfo();
                 result = true;
+            }
+            else if(args[0].equals("range"))
+            {
+                if(args.length > 1)
+                {
+                    result = setRange(args[1]);
+                }
+
+                if(result == false)
+                {
+                    sender.sendMessage("爆発範囲を整数で指定してください。");
+                    sender.sendMessage("[mobbaku help] でコマンドを確認してください");
+                }
             }
             else
             {
@@ -153,14 +181,69 @@ public class MobExplosion extends JavaPlugin
             this.obj_explosion.setExplosionPlayer(args);
         }
     }
+
+    // プレイヤー除外コマンド処理
+    private void removePlayer(CommandSender sender, String[] args)
+    {
+        if(args[0].equals("@a"))
+        {
+            this.obj_explosion.clearExplosionPlayer();
+        }
+        else if(args[0].equals("@r"))
+        {
+            // セレクター指定時の処理
+            List<Entity> entityList = Bukkit.selectEntities(sender, args[0]);
+            
+            if(!entityList.isEmpty())
+            {
+                Player pl = (Player)(entityList.get(0));
+                String[] pl_name = {pl.getName()};
+                this.obj_explosion.removeExplosionPlayer(pl_name);
+            }
+        }
+        else
+        {
+            // プレイヤーID指定時の処理
+            this.obj_explosion.removeExplosionPlayer(args);
+        }
+    }
     
     // コマンドヘルプ取得処理
     private void getHelp(CommandSender sender)
     {
         // コマンドのへプルを表示
         sender.sendMessage("mobbaku on <player>  [プラグインを有効化 (プレイヤーの指定は任意です)]");
-        sender.sendMessage("mobbaku add <player>  [ダメージを受けると爆発するプレイヤーを追加]");
         sender.sendMessage("mobbaku off [プラグインを無効化]");
+        sender.sendMessage("mobbaku add <player>  [ダメージを受けると爆発するプレイヤーを追加  @a/@r指定可]");
+        sender.sendMessage("mobbaku remove <player>  [指定したプレイヤーがダメージを受けても爆発しないようにする  @a/@r指定可]");
+        sender.sendMessage("mobbaku range <int>  [爆発範囲を指定する（デフォルト3）]");
+        sender.sendMessage("mobbaku info  [プラグインの設定値確認]");
+    }
+
+    // 爆発範囲の設定
+    private boolean setRange(String range)
+    {
+        boolean result = false;
+
+        try 
+        {
+            int num = Integer.parseInt(range);
+            this.obj_explosion.setExplosionRange(num);
+            result = true;
+
+        } catch (Exception e) 
+        {
+        }
+
+        return result;
+    }
+
+    // プラグインの設定情報取得
+    private void getInfo()
+    {
+        getLogger().info("Enable Plugin : " + this.obj_explosion.getEnableFlg());
+        getLogger().info("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
+        getLogger().info("Explosion Range : " + this.obj_explosion.getExplosionRange());
     }
 
     // コマンド引数からプレイヤー名のみ抽出
@@ -174,13 +257,5 @@ public class MobExplosion extends JavaPlugin
         String[] result = (String[])list.toArray(new String[list.size()]);
 
         return result;
-    }
-
-    // 試験用
-    private void getInfo()
-    {
-        getLogger().info("Enable Plugin : " + this.obj_explosion.getEnableFlg());
-        getLogger().info("Explosion Player : " + Arrays.toString(this.obj_explosion.getExplosionPlayer()));
-        getLogger().info("Explosion Range : " + this.obj_explosion.getExplosionRange());
     }
 }
