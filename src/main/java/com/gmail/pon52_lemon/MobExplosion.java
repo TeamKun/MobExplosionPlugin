@@ -50,7 +50,7 @@ public class MobExplosion extends JavaPlugin
                 else if(args[0].equals("range"))
                 {
                     return Stream.of("整数を入力してください")
-                            .filter(e -> e.startsWith(args[0]))
+                            .filter(e -> e.startsWith(args[1]))
                             .collect(Collectors.toList());
                 }
         }
