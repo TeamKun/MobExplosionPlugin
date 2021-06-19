@@ -24,12 +24,10 @@ public class ExplosionListener implements Listener
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event)
     {
-        if(this.enable_plugin == false || excl_flg == true)
+        if(this.enable_plugin == false)
         {
             return;
         }
-
-        excl_flg = true;
 
         Entity entity = event.getEntity();
         EntityType type = entity.getType();   
@@ -40,7 +38,6 @@ public class ExplosionListener implements Listener
             Player player = (Player)entity;
             if(!this.explosion_player.contains(player.getName()))
             {
-                excl_flg = false;
                 return;
             }
         }
@@ -48,15 +45,21 @@ public class ExplosionListener implements Listener
         // LivingEntity のみ爆発
         if(entity instanceof LivingEntity)
         {
-            // 爆発処理
             Location loc = entity.getLocation();
-            loc.getWorld().createExplosion(entity, this.explosion_range, false);
+            
+            if(excl_flg == false)
+            {
+                excl_flg = true;
     
-            // 誘爆を防ぐためにエンティティをKILL
-            event.setDamage(event.getDamage() * 1000);
+                // 爆発処理
+                loc.getWorld().createExplosion(entity, this.explosion_range, false);
+                
+                // 誘爆を防ぐためにエンティティをKILL
+                event.setDamage(event.getDamage() * 1000);
+                
+                excl_flg = false;
+            }
         }
-        
-        excl_flg = false;
     }
 
     public void setEnableFlg(Boolean flg)
