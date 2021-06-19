@@ -41,13 +41,7 @@ public class MobExplosion extends JavaPlugin
                         .filter(e -> e.startsWith(args[0]))
                         .collect(Collectors.toList());
             case 2:
-                if(args[0].equals("on") || args[0].equals("add") || args[0].equals("remove"))
-                {
-                    return Stream.concat(Bukkit.getOnlinePlayers().stream().map(Player::getName), Stream.of("@a", "@r"))
-                                .filter(x -> x.startsWith(args[1]))
-                                .collect(Collectors.toList());
-                }
-                else if(args[0].equals("range"))
+                if(args[0].equals("range"))
                 {
                     return Stream.of("整数を入力してください")
                             .filter(e -> e.startsWith(args[1]))
@@ -55,7 +49,9 @@ public class MobExplosion extends JavaPlugin
                 }
         }
 
-        return Collections.emptyList();
+        return Stream.concat(Bukkit.getOnlinePlayers().stream().map(Player::getName), Stream.of("@a", "@r"))
+        .filter(x -> x.startsWith(args[1]))
+        .collect(Collectors.toList());
     }
 
     // コマンド処理
