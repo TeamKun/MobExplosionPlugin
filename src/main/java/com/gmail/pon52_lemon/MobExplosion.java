@@ -47,6 +47,12 @@ public class MobExplosion extends JavaPlugin
                                 .filter(x -> x.startsWith(args[1]))
                                 .collect(Collectors.toList());
                 }
+                else if(args[0].equals("range"))
+                {
+                    return Stream.of("整数を入力してください")
+                            .filter(e -> e.startsWith(args[0]))
+                            .collect(Collectors.toList());
+                }
         }
 
         return Collections.emptyList();
@@ -68,7 +74,7 @@ public class MobExplosion extends JavaPlugin
             if(args[0].equals("on"))
             {
                 // プラグイン有効化
-                onMobBaku();
+                onMobBaku(sender);
 
                 if(args.length > 1)
                 {
@@ -82,7 +88,7 @@ public class MobExplosion extends JavaPlugin
             else if(args[0].equals("off"))
             {
                 // プラグイン無効化
-                offMobBaku();
+                offMobBaku(sender);
                 result = true;
             }
             else if(args[0].equals("add"))
@@ -130,7 +136,7 @@ public class MobExplosion extends JavaPlugin
             {
                 if(args.length > 1)
                 {
-                    result = setRange(args[1]);
+                    result = setRange(sender, args[1]);
                 }
 
                 if(result == false)
@@ -150,16 +156,18 @@ public class MobExplosion extends JavaPlugin
     }
 
     // 起動コマンド処理
-    private void onMobBaku()
+    private void onMobBaku(CommandSender sender)
     {
         this.obj_explosion.clearExplosionPlayer();
         this.obj_explosion.setEnableFlg(true);
+        sender.sendMessage("MOB爆クラフトが有効になりました");
     }
 
     // 終了コマンド処理
-    private void offMobBaku()
+    private void offMobBaku(CommandSender sender)
     {
         this.obj_explosion.setEnableFlg(false);
+        sender.sendMessage("MOB爆クラフトが無効になりました");
     }
 
     // プレイヤー追加コマンド処理
@@ -180,12 +188,25 @@ public class MobExplosion extends JavaPlugin
                 }
 
                 this.obj_explosion.setExplosionPlayer(pl_list.toArray(new String[pl_list.size()]));
+
+                if(args[0].equals("@a"))
+                {
+                    sender.sendMessage("全てのプレイヤーが爆発する体になりました");
+                }
+                else
+                {
+                    sender.sendMessage("以下のプレイヤーが爆発する体になりました");
+                    sender.sendMessage(Arrays.toString(pl_list.toArray(new String[pl_list.size()])));
+                }
             }
         }
         else
         {
             // プレイヤーID指定時の処理
             this.obj_explosion.setExplosionPlayer(args);
+
+            sender.sendMessage("以下のプレイヤーが爆発する体になりました");
+            sender.sendMessage(Arrays.toString(args));
         }
     }
 
@@ -195,6 +216,8 @@ public class MobExplosion extends JavaPlugin
         if(args[0].equals("@a"))
         {
             this.obj_explosion.clearExplosionPlayer();
+            
+            sender.sendMessage("全てのプレイヤーが爆発する体から解放されました");
         }
         else if(args[0].equals("@r"))
         {
@@ -206,12 +229,18 @@ public class MobExplosion extends JavaPlugin
                 Player pl = (Player)(entityList.get(0));
                 String[] pl_name = {pl.getName()};
                 this.obj_explosion.removeExplosionPlayer(pl_name);
+
+                sender.sendMessage("以下のプレイヤーが爆発する体から解放されました");
+                sender.sendMessage(Arrays.toString(pl_name));
             }
         }
         else
         {
             // プレイヤーID指定時の処理
             this.obj_explosion.removeExplosionPlayer(args);
+
+            sender.sendMessage("以下のプレイヤーが爆発する体から解放されました");
+            sender.sendMessage(Arrays.toString(args));
         }
     }
     
@@ -228,7 +257,7 @@ public class MobExplosion extends JavaPlugin
     }
 
     // 爆発範囲の設定
-    private boolean setRange(String range)
+    private boolean setRange(CommandSender sender, String range)
     {
         boolean result = false;
 
@@ -236,6 +265,8 @@ public class MobExplosion extends JavaPlugin
         {
             int num = Integer.parseInt(range);
             this.obj_explosion.setExplosionRange(num);
+
+            sender.sendMessage("爆発範囲を " + num + "に設定しました");
             result = true;
 
         } catch (Exception e) 
