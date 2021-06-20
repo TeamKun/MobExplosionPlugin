@@ -55,7 +55,8 @@ public class ExplosionListener implements Listener
                 loc.getWorld().createExplosion(entity, this.explosion_range, false);
                 
                 // 誘爆を防ぐためにエンティティをKILL
-                event.setDamage(event.getDamage() * 1000);
+                LivingEntity livingEntity = (LivingEntity)entity;
+                livingEntity.setHealth(0);
                 
                 excl_flg = false;
             }
